@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.db import IntegrityError
+from django.core.mail import send_mail
+from django.conf import settings
+from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -23,6 +27,27 @@ def services(request):
 
 def contact(request):
     return render(request, 'myapp/contact.html')
+
+def send_email(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        
+        # Construct the email subject and message
+        subject = f'New message from {name}'
+        email_message = f'{message}'
+        
+        # Send the email
+        send_mail(
+            subject,
+            email_message,
+            settings.DEFAULT_FROM_EMAIL,
+            [email],  # Send to the email provided by the user
+            fail_silently=False,
+        )
+        return HttpResponse('Form submitted successfully!')
+    return render(request, 'myapp/send-email.html')
 
 def assesment(request):
     return render(request, 'myapp/assesment.html')
