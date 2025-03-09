@@ -2,8 +2,10 @@
 {% load static %}
 {% block title %}Home Page{% endblock %}
 
-{% block content %}
+{% block main %}
     <div>
-        <p>This is my home page</p>
+        {%for names in name %}
+            <p>This is my home page <a href="">{{names.name}}</a></p>
+        {% endfor %}    
     </div>    
 {% endblock %}
